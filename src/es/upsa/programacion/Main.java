@@ -1,6 +1,6 @@
 package es.upsa.programacion;
 
-import es.upsa.programacion.piece.Board;
+import es.upsa.programacion.controllers.Board;
 
 import java.util.Scanner;
 

@@ -1,11 +1,11 @@
-package es.upsa.programacion.piece.kind;
+package es.upsa.programacion.models.kind;
 
 import es.upsa.programacion.Color;
-import es.upsa.programacion.piece.Piece;
+import es.upsa.programacion.models.Piece;
 
-public class Bishop extends Piece {
+public class BishopPiece extends Piece {
 
-    public Bishop(Color color) {
+    public BishopPiece(Color color) {
         super(color, '♝');
     }
 

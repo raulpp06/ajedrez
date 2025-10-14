@@ -1,11 +1,11 @@
-package es.upsa.programacion.piece.kind;
+package es.upsa.programacion.models.kind;
 
 import es.upsa.programacion.Color;
-import es.upsa.programacion.piece.Piece;
+import es.upsa.programacion.models.Piece;
 
-public class Pawn extends Piece {
+public class PawnPiece extends Piece {
 
-    public Pawn(Color color) {
+    public PawnPiece(Color color) {
         super(color, '♟');
     }
 

@@ -1,11 +1,11 @@
-package es.upsa.programacion.piece.kind;
+package es.upsa.programacion.models.kind;
 
 import es.upsa.programacion.Color;
-import es.upsa.programacion.piece.Piece;
+import es.upsa.programacion.models.Piece;
 
-public class Knight extends Piece {
+public class KnightPiece extends Piece {
 
-    public Knight(Color color) {
+    public KnightPiece(Color color) {
         super(color, '♞');
     }
 

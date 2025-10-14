@@ -1,13 +1,13 @@
-package es.upsa.programacion.piece.kind;
+package es.upsa.programacion.models.kind;
 
 import es.upsa.programacion.Color;
-import es.upsa.programacion.piece.Piece;
+import es.upsa.programacion.models.Piece;
 
-public class King extends Piece {
+public class KingPiece extends Piece {
 
     private boolean hasMoved = false;
 
-    public King(Color color) {
+    public KingPiece(Color color) {
         super(color, '♚');
     }
 
@@ -16,7 +16,7 @@ public class King extends Piece {
         if (!hasMoved && fromRow == toRow) {
             if (toCol - fromCol == 2) {
                 Piece piece = board[fromRow][7];
-                if (piece instanceof Rook rook && rook.hasMoved()) {
+                if (piece instanceof RookPiece rookPiece && rookPiece.hasMoved()) {
                     if (board[fromRow][5] == null && board[fromRow][6] == null) {
                         // TODO: mirar que rey no este en mate
                         return true;
@@ -25,7 +25,7 @@ public class King extends Piece {
             }
             else if (fromCol - toCol == 2) {
                 Piece rook = board[fromRow][0];
-                if (rook instanceof Rook && !((Rook) rook).hasMoved()) {
+                if (rook instanceof RookPiece && !((RookPiece) rook).hasMoved()) {
                     if (board[fromRow][1] == null && board[fromRow][2] == null && board[fromRow][3] == null) {
                         // TODO: mirar que rey no este en mate
                         return true;

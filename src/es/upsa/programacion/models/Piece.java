@@ -1,4 +1,4 @@
-package es.upsa.programacion.piece;
+package es.upsa.programacion.models;
 
 import es.upsa.programacion.Color;
 
@@ -19,9 +19,16 @@ public abstract class Piece {
 
     public char getSymbol() { return symbol; }
 
+    public String getDisplaySymbol() {
+        return this.color == Color.BLACK ? "\033[0;30m" + symbol + "\033[0m" : "\u001B[37m" + symbol + "\u001B[0m";
+    }
+
     @Override
     public String toString() {
-        return this.color == Color.BLACK ? "\033[0;30m" + symbol + "\033[0m" : "\u001B[37m" + symbol + "\u001B[0m";
+        return "Piece{" +
+                "color=" + color +
+                ", symbol=" + symbol +
+                '}';
     }
 
     public abstract boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, Piece[][] board);

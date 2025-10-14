@@ -1,48 +1,45 @@
-package es.upsa.programacion.piece;
+package es.upsa.programacion.controllers;
 
 import es.upsa.programacion.Color;
-import es.upsa.programacion.piece.kind.*;
+import es.upsa.programacion.models.Piece;
+import es.upsa.programacion.models.kind.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    Piece[][] board = new Piece[8][8];
-    List<Piece> capturedWhitePieces = new ArrayList<>();
-    List<Piece> capturedBlackPieces = new ArrayList<>();
+    private final Piece[][] board = new Piece[8][8];
+    private final List<Piece> capturedWhitePieces = new ArrayList<>();
+    private final List<Piece> capturedBlackPieces = new ArrayList<>();
     private int[] enPassantTarget = null;
 
     public Board() {
-        setup();
-    }
-
-    private void setup() {
         // peones
         for (int i = 0; i < 8; i++) {
-            board[1][i] = new Pawn(Color.BLACK);
-            board[6][i] = new Pawn(Color.WHITE);
+            board[1][i] = new PawnPiece(Color.BLACK);
+            board[6][i] = new PawnPiece(Color.WHITE);
         }
 
         // torres
-        board[0][0] = new Rook(Color.BLACK);
-        board[0][7] = new Rook(Color.BLACK);
-        board[7][0] = new Rook(Color.WHITE);
-        board[7][7] = new Rook(Color.WHITE);
+        board[0][0] = new RookPiece(Color.BLACK);
+        board[0][7] = new RookPiece(Color.BLACK);
+        board[7][0] = new RookPiece(Color.WHITE);
+        board[7][7] = new RookPiece(Color.WHITE);
         // caballos
-        board[0][1] = new Knight(Color.BLACK);
-        board[0][6] = new Knight(Color.BLACK);
-        board[7][1] = new Knight(Color.WHITE);
-        board[7][6] = new Knight(Color.WHITE);
+        board[0][1] = new KnightPiece(Color.BLACK);
+        board[0][6] = new KnightPiece(Color.BLACK);
+        board[7][1] = new KnightPiece(Color.WHITE);
+        board[7][6] = new KnightPiece(Color.WHITE);
         // alfiles
-        board[0][2] = new Bishop(Color.BLACK);
-        board[0][5] = new Bishop(Color.BLACK);
-        board[7][2] = new Bishop(Color.WHITE);
-        board[7][5] = new Bishop(Color.WHITE);
+        board[0][2] = new BishopPiece(Color.BLACK);
+        board[0][5] = new BishopPiece(Color.BLACK);
+        board[7][2] = new BishopPiece(Color.WHITE);
+        board[7][5] = new BishopPiece(Color.WHITE);
         // rey/reina
-        board[0][3] = new Queen(Color.BLACK);
-        board[0][4] = new King(Color.BLACK);
-        board[7][3] = new Queen(Color.WHITE);
-        board[7][4] = new King(Color.WHITE);
+        board[0][3] = new QueenPiece(Color.BLACK);
+        board[0][4] = new KingPiece(Color.BLACK);
+        board[7][3] = new QueenPiece(Color.WHITE);
+        board[7][4] = new KingPiece(Color.WHITE);
     }
 
     public void print() {
@@ -50,7 +47,7 @@ public class Board {
             System.out.print((8 - row) + " ");
             for (int col = 0; col < 8; col++) {
                 Piece piece = board[row][col];
-                System.out.print((piece == null ? '.' : piece) + " ");
+                System.out.print((piece == null ? '.' : piece.getDisplaySymbol()) + " ");
             }
             System.out.println();
         }
@@ -94,7 +91,7 @@ public class Board {
             else capturedWhitePieces.add(target);
         }
 
-        if (piece instanceof Pawn && enPassantTarget != null &&
+        if (piece instanceof PawnPiece && enPassantTarget != null &&
                 toRow == enPassantTarget[0] && toCol == enPassantTarget[1]) {
             int capturedRow = (turn == Color.WHITE) ? toRow + 1 : toRow - 1;
             Piece capturedPawn = board[capturedRow][toCol];
@@ -104,36 +101,40 @@ public class Board {
             else capturedWhitePieces.add(capturedPawn);
         }
 
-        if (piece instanceof King && Math.abs(toCol - fromCol) == 2) {
+        if (piece instanceof KingPiece && Math.abs(toCol - fromCol) == 2) {
             if (toCol == 6) {
-                board[toRow][5] = board[toRow][7];
-                board[toRow][7] = null;
-                ((Rook) board[toRow][5]).setMoved(true);
+                if (!(board[toRow][7] instanceof RookPiece)) {
+                    board[toRow][5] = board[toRow][7];
+                    board[toRow][7] = null;
+                    ((RookPiece) board[toRow][5]).setMoved(true);
+                }
             } else if (toCol == 2) {
-                board[toRow][3] = board[toRow][0];
-                board[toRow][0] = null;
-                ((Rook) board[toRow][3]).setMoved(true);
+                if (!(board[toRow][7] instanceof RookPiece)) {
+                    board[toRow][3] = board[toRow][0];
+                    board[toRow][0] = null;
+                    ((RookPiece) board[toRow][3]).setMoved(true);
+                }
             }
         }
 
         board[toRow][toCol] = piece;
         board[fromRow][fromCol] = null;
 
-        if (piece instanceof Pawn) {
+        if (piece instanceof PawnPiece) {
             if ((piece.getColor() == Color.WHITE && toRow == 0) ||
                     (piece.getColor() == Color.BLACK && toRow == 7)) {
-                board[toRow][toCol] = new Queen(piece.getColor());
+                board[toRow][toCol] = new QueenPiece(piece.getColor());
                 System.out.println("Pawn promoted to Queen!");
             }
         }
 
-        if (piece instanceof Pawn && Math.abs(toRow - fromRow) == 2) {
+        if (piece instanceof PawnPiece && Math.abs(toRow - fromRow) == 2) {
             enPassantTarget = new int[]{(fromRow + toRow) / 2, fromCol};
         } else {
             enPassantTarget = null;
         }
 
-        if (piece instanceof Rook rook) rook.setMoved(true);
+        if (piece instanceof RookPiece rookPiece) rookPiece.setMoved(true);
 
         return true;
     }
@@ -145,7 +146,7 @@ public class Board {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 Piece piece = board[row][col];
-                if (piece instanceof King) {
+                if (piece instanceof KingPiece) {
                     if (piece.getColor() == Color.WHITE) whiteKingExists = true;
                     else blackKingExists = true;
                 }

@@ -1,13 +1,13 @@
-package es.upsa.programacion.piece.kind;
+package es.upsa.programacion.models.kind;
 
 import es.upsa.programacion.Color;
-import es.upsa.programacion.piece.Piece;
+import es.upsa.programacion.models.Piece;
 
-public class Rook extends Piece {
+public class RookPiece extends Piece {
 
     private boolean hasMoved = false;
 
-    public Rook(Color color) {
+    public RookPiece(Color color) {
         super(color, '♜');
     }
 
