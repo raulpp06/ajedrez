@@ -12,6 +12,7 @@ public class Board {
     private final List<Piece> capturedWhitePieces = new ArrayList<>();
     private final List<Piece> capturedBlackPieces = new ArrayList<>();
     private int[] enPassantTarget = null;
+    //hola
 
     public Board() {
         // peones
