@@ -1,9 +1,8 @@
-package es.upsa.programacion.models.kind;
+package es.upsa.programacion.models.pieces;
 
 import es.upsa.programacion.Color;
-import es.upsa.programacion.models.Piece;
 
-public class KingPiece extends Piece {
+public class KingPiece extends AbstractPiece {
 
     private boolean hasMoved = false;
 
@@ -12,10 +11,10 @@ public class KingPiece extends Piece {
     }
 
     @Override
-    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, Piece[][] board) {
+    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, AbstractPiece[][] board) {
         if (!hasMoved && fromRow == toRow) {
             if (toCol - fromCol == 2) {
-                Piece piece = board[fromRow][7];
+                AbstractPiece piece = board[fromRow][7];
                 if (piece instanceof RookPiece rookPiece && rookPiece.hasMoved()) {
                     if (board[fromRow][5] == null && board[fromRow][6] == null) {
                         // TODO: mirar que rey no este en mate
@@ -24,7 +23,7 @@ public class KingPiece extends Piece {
                 }
             }
             else if (fromCol - toCol == 2) {
-                Piece rook = board[fromRow][0];
+                AbstractPiece rook = board[fromRow][0];
                 if (rook instanceof RookPiece && !((RookPiece) rook).hasMoved()) {
                     if (board[fromRow][1] == null && board[fromRow][2] == null && board[fromRow][3] == null) {
                         // TODO: mirar que rey no este en mate

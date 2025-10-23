@@ -1,9 +1,8 @@
-package es.upsa.programacion.models.kind;
+package es.upsa.programacion.models.pieces;
 
 import es.upsa.programacion.Color;
-import es.upsa.programacion.models.Piece;
 
-public class RookPiece extends Piece {
+public class RookPiece extends AbstractPiece {
 
     private boolean hasMoved = false;
 
@@ -16,7 +15,7 @@ public class RookPiece extends Piece {
     public void setMoved(boolean moved) { this.hasMoved = moved; }
 
     @Override
-    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, Piece[][] board) {
+    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, AbstractPiece[][] board) {
         if (fromRow != toRow && fromCol != toCol)
             return false;
 

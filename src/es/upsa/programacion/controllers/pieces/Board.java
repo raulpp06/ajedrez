@@ -1,16 +1,15 @@
-package es.upsa.programacion.controllers;
+package es.upsa.programacion.controllers.pieces;
 
 import es.upsa.programacion.Color;
-import es.upsa.programacion.models.Piece;
-import es.upsa.programacion.models.kind.*;
+import es.upsa.programacion.models.pieces.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    private final Piece[][] board = new Piece[8][8];
-    private final List<Piece> capturedWhitePieces = new ArrayList<>();
-    private final List<Piece> capturedBlackPieces = new ArrayList<>();
+    private final AbstractPiece[][] board = new AbstractPiece[8][8];
+    private final List<AbstractPiece> capturedWhitePieces = new ArrayList<>();
+    private final List<AbstractPiece> capturedBlackPieces = new ArrayList<>();
     private int[] enPassantTarget = null;
 
     public Board() {
@@ -42,11 +41,28 @@ public class Board {
         board[7][4] = new KingPiece(Color.WHITE);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int row = 0; row < 8; row++) {
+            sb.append((8 - row) + " ");
+            for (int col = 0; col < 8; col++) {
+                AbstractPiece piece = board[row][col];
+                sb.append((piece == null ? '.' : piece.getDisplaySymbol()) + " ");
+            }
+            sb.append(System.lineSeparator());
+        }
+        sb.append("  a b c d e f g h" + System.lineSeparator());
+        sb.append("Captured by white: " + capturedBlackPieces + System.lineSeparator());
+        sb.append("Captured by black: " + capturedWhitePieces + System.lineSeparator());
+        return sb.toString();
+    }
+
     public void print() {
         for (int row = 0; row < 8; row++) {
             System.out.print((8 - row) + " ");
             for (int col = 0; col < 8; col++) {
-                Piece piece = board[row][col];
+                AbstractPiece piece = board[row][col];
                 System.out.print((piece == null ? '.' : piece.getDisplaySymbol()) + " ");
             }
             System.out.println();
@@ -69,7 +85,7 @@ public class Board {
                 fromRow < 0 || fromRow > 7 || toRow < 0 || toRow > 7)
             return false;
 
-        Piece piece = board[fromRow][fromCol];
+        AbstractPiece piece = board[fromRow][fromCol];
         if (piece == null) {
             System.out.println("No piece at that square!");
             return false;
@@ -84,7 +100,7 @@ public class Board {
             return false;
         }
 
-        Piece target = board[toRow][toCol];
+        AbstractPiece target = board[toRow][toCol];
         if (target != null && target.getColor() != turn) {
             System.out.println(turn + " captures " + target.getSymbol() + "!");
             if (turn == Color.WHITE) capturedBlackPieces.add(target);
@@ -94,7 +110,7 @@ public class Board {
         if (piece instanceof PawnPiece && enPassantTarget != null &&
                 toRow == enPassantTarget[0] && toCol == enPassantTarget[1]) {
             int capturedRow = (turn == Color.WHITE) ? toRow + 1 : toRow - 1;
-            Piece capturedPawn = board[capturedRow][toCol];
+            AbstractPiece capturedPawn = board[capturedRow][toCol];
             board[capturedRow][toCol] = null;
             System.out.println(turn + " performs en passant capture!");
             if (turn == Color.WHITE) capturedBlackPieces.add(capturedPawn);
@@ -145,7 +161,7 @@ public class Board {
 
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                Piece piece = board[row][col];
+                AbstractPiece piece = board[row][col];
                 if (piece instanceof KingPiece) {
                     if (piece.getColor() == Color.WHITE) whiteKingExists = true;
                     else blackKingExists = true;

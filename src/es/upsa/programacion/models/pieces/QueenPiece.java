@@ -1,16 +1,15 @@
-package es.upsa.programacion.models.kind;
+package es.upsa.programacion.models.pieces;
 
 import es.upsa.programacion.Color;
-import es.upsa.programacion.models.Piece;
 
-public class QueenPiece extends Piece {
+public class QueenPiece extends AbstractPiece {
 
     public QueenPiece(Color color) {
         super(color, '♛');
     }
 
     @Override
-    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, Piece[][] board) {
+    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, AbstractPiece[][] board) {
         int rowDiff = Math.abs(toRow - fromRow);
         int colDiff = Math.abs(toCol - fromCol);
 

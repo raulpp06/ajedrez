@@ -1,16 +1,15 @@
-package es.upsa.programacion.models.kind;
+package es.upsa.programacion.models.pieces;
 
 import es.upsa.programacion.Color;
-import es.upsa.programacion.models.Piece;
 
-public class PawnPiece extends Piece {
+public class PawnPiece extends AbstractPiece {
 
     public PawnPiece(Color color) {
         super(color, '♟');
     }
 
     @Override
-    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, Piece[][] board) {
+    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, AbstractPiece[][] board) {
         int direction = (this.getColor() == Color.WHITE) ? -1 : 1;
         int startRow = (this.getColor() == Color.WHITE) ? 6 : 1;
 
