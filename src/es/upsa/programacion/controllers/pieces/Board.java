@@ -53,8 +53,8 @@ public class Board {
             sb.append(System.lineSeparator());
         }
         sb.append("  a b c d e f g h" + System.lineSeparator());
-        sb.append("Captured by white: " + capturedBlackPieces + System.lineSeparator());
-        sb.append("Captured by black: " + capturedWhitePieces + System.lineSeparator());
+        sb.append("Capturado por blanco: " + capturedBlackPieces + System.lineSeparator());
+        sb.append("Capturado por negro: " + capturedWhitePieces + System.lineSeparator());
         return sb.toString();
     }
 
@@ -68,8 +68,8 @@ public class Board {
             System.out.println();
         }
         System.out.println("  a b c d e f g h");
-        System.out.println("Captured by white: " + capturedBlackPieces);
-        System.out.println("Captured by black: " + capturedWhitePieces);
+        System.out.println("Capturado por blanco: " + capturedBlackPieces);
+        System.out.println("Capturado por negro: " + capturedWhitePieces);
     }
 
     public boolean move(String moveStr, Color turn) {
@@ -87,16 +87,16 @@ public class Board {
 
         AbstractPiece piece = board[fromRow][fromCol];
         if (piece == null) {
-            System.out.println("No piece at that square!");
+            System.out.println("No existe pieza en esa coordenada");
             return false;
         }
         if (piece.getColor() != turn) {
-            System.out.println("That’s not your piece!");
+            System.out.println("No es tu pieza!");
             return false;
         }
 
         if (!piece.isValidMove(fromRow, fromCol, toRow, toCol, board)) {
-            System.out.println("That move is not valid for that piece!");
+            System.out.println("Es un movimiento invalido para tu pieza!");
             return false;
         }
 
@@ -112,7 +112,7 @@ public class Board {
             int capturedRow = (turn == Color.WHITE) ? toRow + 1 : toRow - 1;
             AbstractPiece capturedPawn = board[capturedRow][toCol];
             board[capturedRow][toCol] = null;
-            System.out.println(turn + " performs en passant capture!");
+            System.out.println(turn + " hace una captura en passant!");
             if (turn == Color.WHITE) capturedBlackPieces.add(capturedPawn);
             else capturedWhitePieces.add(capturedPawn);
         }
@@ -140,7 +140,7 @@ public class Board {
             if ((piece.getColor() == Color.WHITE && toRow == 0) ||
                     (piece.getColor() == Color.BLACK && toRow == 7)) {
                 board[toRow][toCol] = new QueenPiece(piece.getColor());
-                System.out.println("Pawn promoted to Queen!");
+                System.out.println("Peón se transforma en reina!");
             }
         }
 
@@ -182,7 +182,7 @@ public class Board {
 
         if (winner != null) {
             System.out.println("\n♟♟♟ GAME OVER ♟♟♟");
-            System.out.println("Congratulations " + winner + "! You have captured the " + loser + " King and won the game!");
+            System.out.println("Felicidades " + winner + "! has capturado a el rey de " + loser + " y ganado el juego!");
             System.out.println("🏆🏆🏆");
             return true;
         }

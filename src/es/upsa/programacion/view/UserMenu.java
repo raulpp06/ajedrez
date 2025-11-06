@@ -1,5 +1,7 @@
 package es.upsa.programacion.view;
 
+import es.upsa.programacion.Color;
+import es.upsa.programacion.controllers.pieces.Board;
 import es.upsa.programacion.controllers.users.UserController;
 import es.upsa.programacion.models.users.AbstractUser;
 
@@ -81,7 +83,21 @@ public class UserMenu {
                         //Cerrar sesion
                         break;
                     case 1:
-                        //Jugar
+                        Scanner scanner = new Scanner(System.in);
+                        Board board = new Board();
+                        Color turn = Color.WHITE;
+                        while (true) {
+                            board.print();
+                            System.out.print(turn + " to move (e.g. e2 e4): ");
+                            String move = scanner.nextLine().trim();
+                            if (move.equalsIgnoreCase("quit")) break;
+                            if (board.move(move, turn)) {
+                                turn = (turn == Color.WHITE) ? Color.BLACK : Color.WHITE;
+                            } else {
+                                System.out.println("Invalid move, try again.");
+                            }
+                            if (board.isGameOver()) break;
+                        }
                         break;
                     case 2:
                         //Ver estadisticas
