@@ -3,13 +3,14 @@ package es.upsa.programacion;
 import es.upsa.programacion.controllers.pieces.Board;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class MainServer {
     public static void main(String[] args) {
         int port = 6969; // choose any free port
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
+        try (ServerSocket serverSocket = new ServerSocket(port, 50, InetAddress.getByName("0.0.0.0"))) {
             System.out.println("Chess server listening on port " + port + "...");
 
             try (Socket client = serverSocket.accept();
