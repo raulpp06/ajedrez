@@ -1,28 +1,23 @@
 package es.upsa.programacion.view;
 
-import es.upsa.programacion.Color;
-import es.upsa.programacion.controllers.pieces.Board;
 import es.upsa.programacion.controllers.users.UserController;
 import es.upsa.programacion.models.users.AbstractUser;
+import es.upsa.programacion.models.users.User;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.Scanner;
 
-public class UserMenu {
+public class UserMenu implements Menu {
 
-    private UserController userController;
-    private Scanner sc;
-
-    public UserMenu() {
-        this.userController = new UserController();
-        this.sc = new Scanner(System.in);
-    }
+    private final UserController userController = new UserController();
+    private final Scanner sc = new Scanner(System.in);
 
     public UserController getUserController() {
         return userController;
     }
 
-    public void showMenu() {
+    public void start() {
         int elegido;
         Optional<AbstractUser> maybeUser = null;
 
@@ -72,38 +67,30 @@ public class UserMenu {
 
             System.out.println("Selecciona opcion:");
 
-            System.out.println("1. Jugar");
-            System.out.println("2. Estadisticas");
-            System.out.println("0. Cerrar sesion");
+            while (true) {
+                System.out.println("\n1. Jugar");
+                if (user instanceof User) System.out.println("2. Estadisticas");
+                System.out.println("0. Cerrar sesion");
 
-            do {
                 opc = sc.nextInt();
                 switch (opc) {
                     case 0:
-                        //Cerrar sesion
-                        break;
+                        return;
                     case 1:
-                        Scanner scanner = new Scanner(System.in);
-                        Board board = new Board();
-                        Color turn = Color.WHITE;
-                        while (true) {
-                            board.print();
-                            System.out.print(turn + " to move (e.g. e2 e4): ");
-                            String move = scanner.nextLine().trim();
-                            if (move.equalsIgnoreCase("quit")) break;
-                            if (board.move(move, turn)) {
-                                turn = (turn == Color.WHITE) ? Color.BLACK : Color.WHITE;
-                            } else {
-                                System.out.println("Invalid move, try again.");
-                            }
-                            if (board.isGameOver()) break;
-                        }
+                        BoardMenu boardMenu = new BoardMenu();
+                        boardMenu.start();
                         break;
                     case 2:
-                        //Ver estadisticas
+                        if (user instanceof User uuser) {
+                            System.out.println("Fecha de creación de usuario: " + user.getCreated().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                            System.out.println("Partidas ganadas: " + uuser.getWinCount());
+                            System.out.println("Porcentage de victorias: " + uuser.getWinPercentage() + "%");
+                        } else {
+                            throw new IllegalStateException("Unreachable");
+                        }
                         break;
                 }
-            } while  (opc < 0 || opc > 2);
+            }
         });
     }
 }

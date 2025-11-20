@@ -7,7 +7,7 @@ public class Main {
 
         UserMenu menu = new UserMenu();
         menu.getUserController().loadUsers();
-        menu.showMenu();
+        menu.start();
         menu.getUserController().finish();
 
 //        Scanner scanner = new Scanner(System.in);

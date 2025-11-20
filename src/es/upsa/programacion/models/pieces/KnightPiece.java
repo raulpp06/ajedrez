@@ -1,6 +1,11 @@
 package es.upsa.programacion.models.pieces;
 
 import es.upsa.programacion.Color;
+import es.upsa.programacion.utils.BoardHelper;
+import es.upsa.programacion.utils.Pair;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class KnightPiece extends AbstractPiece {
 
@@ -9,14 +14,26 @@ public class KnightPiece extends AbstractPiece {
     }
 
     @Override
-    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, AbstractPiece[][] board) {
-        int rowDiff = Math.abs(toRow - fromRow);
-        int colDiff = Math.abs(toCol - fromCol);
+    public Map<Pair<Integer, Integer>, Boolean> isValidMove(int row, int col, AbstractPiece[][] board) {
+        Map<Pair<Integer, Integer>, Boolean> moves = new HashMap<>();
 
-        boolean isLShape = (rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2);
-        if (!isLShape)
-            return false;
+        int[][] offsets = {
+                {2, 1}, {2, -1}, {-2, 1}, {-2, -1},
+                {1, 2}, {1, -2}, {-1, 2}, {-1, -2}
+        };
 
-        return board[toRow][toCol] == null || board[toRow][toCol].getColor() != this.getColor();
+        for (int[] o : offsets) {
+            int r = row + o[0];
+            int c = col + o[1];
+
+            if (!BoardHelper.inBounds(r, c)) continue;
+
+            if (board[r][c] == null || board[r][c].getColor() != this.getColor()) {
+                moves.put(Pair.of(r, c), true);
+            }
+        }
+
+        return moves;
     }
+
 }

@@ -2,15 +2,20 @@ package es.upsa.programacion.controllers.pieces;
 
 import es.upsa.programacion.Color;
 import es.upsa.programacion.models.pieces.*;
+import es.upsa.programacion.utils.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    private final AbstractPiece[][] board = new AbstractPiece[8][8];
+    public static final int BOARD_SIZE = 8;
+    private final AbstractPiece[][] board = new AbstractPiece[BOARD_SIZE][BOARD_SIZE];
     private final List<AbstractPiece> capturedWhitePieces = new ArrayList<>();
     private final List<AbstractPiece> capturedBlackPieces = new ArrayList<>();
     private int[] enPassantTarget = null;
+
+    private Color winner = null;
+    private Color loser = null;
 
     public Board() {
         // peones
@@ -59,15 +64,22 @@ public class Board {
     }
 
     public void print() {
+        final String LIGHT_BG = "\u001B[48;2;240;217;181m";
+        final String DARK_BG  = "\u001B[48;2;181;136;99m";
+        final String RESET = "\u001B[0m";
+
         for (int row = 0; row < 8; row++) {
             System.out.print((8 - row) + " ");
             for (int col = 0; col < 8; col++) {
                 AbstractPiece piece = board[row][col];
-                System.out.print((piece == null ? '.' : piece.getDisplaySymbol()) + " ");
+                String bg = (row + col) % 2 == 0 ? LIGHT_BG : DARK_BG;
+                String pieceSymbol = piece == null ? " " : piece.getDisplaySymbol();
+                System.out.print(bg + " " + pieceSymbol + " " + RESET);
             }
             System.out.println();
         }
-        System.out.println("  a b c d e f g h");
+
+        System.out.println("   a  b  c  d  e  f  g  h");
         System.out.println("Capturado por blanco: " + capturedBlackPieces);
         System.out.println("Capturado por negro: " + capturedWhitePieces);
     }
@@ -95,7 +107,7 @@ public class Board {
             return false;
         }
 
-        if (!piece.isValidMove(fromRow, fromCol, toRow, toCol, board)) {
+        if (piece.isValidMove(fromRow, fromCol, board).getOrDefault(Pair.of(toRow, toCol), false)) {
             System.out.println("Es un movimiento invalido para tu pieza!");
             return false;
         }
@@ -169,9 +181,6 @@ public class Board {
             }
         }
 
-        Color winner = null;
-        Color loser = null;
-
         if (!whiteKingExists) {
             winner = Color.BLACK;
             loser = Color.WHITE;
@@ -188,5 +197,9 @@ public class Board {
         }
 
         return false;
+    }
+
+    public Color getWinner() {
+        return winner;
     }
 }

@@ -1,6 +1,11 @@
 package es.upsa.programacion.models.pieces;
 
 import es.upsa.programacion.Color;
+import es.upsa.programacion.utils.BoardHelper;
+import es.upsa.programacion.utils.Pair;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RookPiece extends AbstractPiece {
 
@@ -10,28 +15,35 @@ public class RookPiece extends AbstractPiece {
         super(color, '♜');
     }
 
-    public boolean hasMoved() { return hasMoved; }
+    public boolean hasMoved() {return hasMoved;}
 
-    public void setMoved(boolean moved) { this.hasMoved = moved; }
+    public void setMoved(boolean moved) {this.hasMoved = moved;}
 
     @Override
-    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, AbstractPiece[][] board) {
-        if (fromRow != toRow && fromCol != toCol)
-            return false;
+    public Map<Pair<Integer, Integer>, Boolean> isValidMove(int row, int col, AbstractPiece[][] board) {
+        Map<Pair<Integer, Integer>, Boolean> moves = new HashMap<>();
 
-        int rowStep = Integer.compare(toRow, fromRow);
-        int colStep = Integer.compare(toCol, fromCol);
+        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
-        int r = fromRow + rowStep;
-        int c = fromCol + colStep;
+        for (int[] d : dirs) {
+            int r = row + d[0];
+            int c = col + d[1];
 
-        while (r != toRow || c != toCol) {
-            if (board[r][c] != null)
-                return false;
-            r += rowStep;
-            c += colStep;
+            while (BoardHelper.inBounds(r, c)) {
+                if (board[r][c] == null) {
+                    moves.put(Pair.of(r, c), true);
+                } else {
+                    if (board[r][c].getColor() != this.getColor()) {
+                        moves.put(Pair.of(r, c), true);
+                    }
+                    break;
+                }
+                r += d[0];
+                c += d[1];
+            }
         }
 
-        return board[toRow][toCol] == null || board[toRow][toCol].getColor() != this.getColor();
+        return moves;
     }
+
 }

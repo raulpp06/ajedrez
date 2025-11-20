@@ -1,6 +1,11 @@
 package es.upsa.programacion.models.pieces;
 
 import es.upsa.programacion.Color;
+import es.upsa.programacion.utils.BoardHelper;
+import es.upsa.programacion.utils.Pair;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BishopPiece extends AbstractPiece {
 
@@ -9,26 +14,32 @@ public class BishopPiece extends AbstractPiece {
     }
 
     @Override
-    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, AbstractPiece[][] board) {
-        int rowDiff = Math.abs(toRow - fromRow);
-        int colDiff = Math.abs(toCol - fromCol);
+    public Map<Pair<Integer, Integer>, Boolean> isValidMove(int row, int col, AbstractPiece[][] board) {
+        Map<Pair<Integer, Integer>, Boolean> moves = new HashMap<>();
 
-        if (rowDiff != colDiff)
-            return false;
+        int[] directions = {-1, 1};
 
-        int rowStep = Integer.compare(toRow, fromRow);
-        int colStep = Integer.compare(toCol, fromCol);
+        for (int dr : directions) {
+            for (int dc : directions) {
+                int r = row + dr;
+                int c = col + dc;
 
-        int r = fromRow + rowStep;
-        int c = fromCol + colStep;
+                while (BoardHelper.inBounds(r, c)) {
+                    if (board[r][c] == null) {
+                        moves.put(Pair.of(r, c), true);
+                    } else {
+                        if (board[r][c].getColor() != this.getColor()) {
+                            moves.put(Pair.of(r, c), true);
+                        }
+                        break;
+                    }
 
-        while (r != toRow && c != toCol) {
-            if (board[r][c] != null)
-                return false;
-            r += rowStep;
-            c += colStep;
+                    r += dr;
+                    c += dc;
+                }
+            }
         }
-
-        return board[toRow][toCol] == null || board[toRow][toCol].getColor() != this.getColor();
+        return moves;
     }
+
 }

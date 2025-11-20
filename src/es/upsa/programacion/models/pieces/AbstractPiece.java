@@ -1,10 +1,10 @@
 package es.upsa.programacion.models.pieces;
 
 import es.upsa.programacion.Color;
+import es.upsa.programacion.utils.Pair;
 
-// Las piezas deberían de tener su posicion en cada una de ellas y isValidMove()
-// deberia de ser cambiado por otro método
-// que te de una lista o mapa de posiciones a las que se puede mover una pieza
+import java.util.Map;
+
 public abstract class AbstractPiece {
 
     private final Color color;
@@ -15,12 +15,12 @@ public abstract class AbstractPiece {
         this.symbol = symbol;
     }
 
-    public Color getColor() { return color; }
+    public Color getColor() {return color;}
 
-    public char getSymbol() { return symbol; }
+    public char getSymbol() {return symbol;}
 
     public String getDisplaySymbol() {
-        return this.color == Color.BLACK ? "\033[0;30m" + symbol + "\033[0m" : "\u001B[37m" + symbol + "\u001B[0m";
+        return this.color == Color.BLACK ? "\u001B[30m" + symbol : "\u001B[37m" + symbol;
     }
 
     @Override
@@ -31,5 +31,5 @@ public abstract class AbstractPiece {
                 '}';
     }
 
-    public abstract boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, AbstractPiece[][] board);
+    public abstract Map<Pair<Integer, Integer>, Boolean> isValidMove(int pieceRow, int pieceCol, AbstractPiece[][] board);
 }

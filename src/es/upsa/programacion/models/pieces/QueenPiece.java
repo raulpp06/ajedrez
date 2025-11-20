@@ -1,6 +1,11 @@
 package es.upsa.programacion.models.pieces;
 
 import es.upsa.programacion.Color;
+import es.upsa.programacion.utils.BoardHelper;
+import es.upsa.programacion.utils.Pair;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class QueenPiece extends AbstractPiece {
 
@@ -9,26 +14,34 @@ public class QueenPiece extends AbstractPiece {
     }
 
     @Override
-    public boolean isValidMove(int fromRow, int fromCol, int toRow, int toCol, AbstractPiece[][] board) {
-        int rowDiff = Math.abs(toRow - fromRow);
-        int colDiff = Math.abs(toCol - fromCol);
+    public Map<Pair<Integer, Integer>, Boolean> isValidMove(int row, int col, AbstractPiece[][] board) {
+        Map<Pair<Integer, Integer>, Boolean> moves = new HashMap<>();
 
-        if (rowDiff != 0 && colDiff != 0 && rowDiff != colDiff)
-            return false;
+        int[] dirs = {-1, 0, 1};
 
-        int rowStep = Integer.compare(toRow, fromRow);
-        int colStep = Integer.compare(toCol, fromCol);
+        for (int dr : dirs) {
+            for (int dc : dirs) {
+                if (dr == 0 && dc == 0) continue;
 
-        int r = fromRow + rowStep;
-        int c = fromCol + colStep;
+                int r = row + dr;
+                int c = col + dc;
 
-        while (r != toRow || c != toCol) {
-            if (board[r][c] != null)
-                return false;
-            r += rowStep;
-            c += colStep;
+                while (BoardHelper.inBounds(r, c)) {
+                    if (board[r][c] == null) {
+                        moves.put(Pair.of(r, c), true);
+                    } else {
+                        if (board[r][c].getColor() != this.getColor()) {
+                            moves.put(Pair.of(r, c), true);
+                        }
+                        break;
+                    }
+                    r += dr;
+                    c += dc;
+                }
+            }
         }
 
-        return board[toRow][toCol] == null || board[toRow][toCol].getColor() != this.getColor();
+        return moves;
     }
+
 }
