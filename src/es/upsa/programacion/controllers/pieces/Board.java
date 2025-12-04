@@ -5,10 +5,12 @@ import es.upsa.programacion.models.pieces.*;
 import es.upsa.programacion.utils.Pair;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class Board {
     public static final int BOARD_SIZE = 8;
+    private static final AbstractPieceSorter SORTER = new AbstractPieceSorter();
     private final AbstractPiece[][] board = new AbstractPiece[BOARD_SIZE][BOARD_SIZE];
     private final List<AbstractPiece> capturedWhitePieces = new ArrayList<>();
     private final List<AbstractPiece> capturedBlackPieces = new ArrayList<>();
@@ -115,8 +117,14 @@ public class Board {
         AbstractPiece target = board[toRow][toCol];
         if (target != null && target.getColor() != turn) {
             System.out.println(turn + " captures " + target.getSymbol() + "!");
-            if (turn == Color.WHITE) capturedBlackPieces.add(target);
-            else capturedWhitePieces.add(target);
+            if (turn == Color.WHITE) {
+                capturedBlackPieces.add(target);
+                capturedBlackPieces.sort(SORTER);
+            }
+            else {
+                capturedWhitePieces.add(target);
+                capturedWhitePieces.sort(SORTER);
+            }
         }
 
         if (piece instanceof PawnPiece && enPassantTarget != null &&
@@ -125,8 +133,14 @@ public class Board {
             AbstractPiece capturedPawn = board[capturedRow][toCol];
             board[capturedRow][toCol] = null;
             System.out.println(turn + " hace una captura en passant!");
-            if (turn == Color.WHITE) capturedBlackPieces.add(capturedPawn);
-            else capturedWhitePieces.add(capturedPawn);
+            if (turn == Color.WHITE) {
+                capturedBlackPieces.add(capturedPawn);
+                capturedBlackPieces.sort(SORTER);
+            }
+            else {
+                capturedWhitePieces.add(capturedPawn);
+                capturedWhitePieces.sort(SORTER);
+            }
         }
 
         if (piece instanceof KingPiece && Math.abs(toCol - fromCol) == 2) {
