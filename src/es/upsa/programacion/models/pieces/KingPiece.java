@@ -9,17 +9,21 @@ import java.util.Map;
 
 public class KingPiece extends AbstractPiece {
 
-    private final boolean hasMoved = false;
+    private boolean hasMoved;
+
+    public KingPiece(Color color, boolean hasMoved) {
+        super(color, '♚');
+        this.hasMoved = hasMoved;
+    }
 
     public KingPiece(Color color) {
-        super(color, '♚');
+        this(color,  false);
     }
 
     @Override
     public Map<Pair<Integer, Integer>, Boolean> isValidMove(int row, int col, AbstractPiece[][] board) {
         Map<Pair<Integer, Integer>, Boolean> moves = new HashMap<>();
 
-        // Normal king moves
         for (int dr = -1; dr <= 1; dr++) {
             for (int dc = -1; dc <= 1; dc++) {
                 if (dr == 0 && dc == 0) continue;
@@ -37,14 +41,12 @@ public class KingPiece extends AbstractPiece {
 
         // Castling
         if (!hasMoved) {
-            // King side
             if (board[row][5] == null && board[row][6] == null) {
                 if (board[row][7] instanceof RookPiece rook && !rook.hasMoved()) {
                     moves.put(Pair.of(row, 6), true);
                 }
             }
 
-            // Queen side
             if (board[row][1] == null && board[row][2] == null && board[row][3] == null) {
                 if (board[row][0] instanceof RookPiece rook && !rook.hasMoved()) {
                     moves.put(Pair.of(row, 2), true);
@@ -55,4 +57,8 @@ public class KingPiece extends AbstractPiece {
         return moves;
     }
 
+    @Override
+    public AbstractPiece copy() {
+        return new KingPiece(this.getColor(), this.hasMoved);
+    }
 }

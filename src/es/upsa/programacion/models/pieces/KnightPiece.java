@@ -36,4 +36,8 @@ public class KnightPiece extends AbstractPiece {
         return moves;
     }
 
+    @Override
+    public AbstractPiece copy() {
+        return new KnightPiece(this.getColor());
+    }
 }

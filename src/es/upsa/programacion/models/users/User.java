@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 public class User extends AbstractUser {
 
-    private final int winCount;
+    private int winCount;
 
     public User(String email, String password, LocalDateTime created) {
         super(email, password, created);
@@ -13,6 +13,10 @@ public class User extends AbstractUser {
 
     public User(String email, String password) {
         this(email, password, LocalDateTime.now());
+    }
+
+    public void addWin() {
+        this.winCount++;
     }
 
     public int getWinCount() {

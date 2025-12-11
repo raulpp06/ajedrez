@@ -5,7 +5,6 @@ import es.upsa.programacion.models.pieces.*;
 import es.upsa.programacion.utils.Pair;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class Board {
@@ -179,6 +178,102 @@ public class Board {
         if (piece instanceof RookPiece rookPiece) rookPiece.setMoved(true);
 
         return true;
+    }
+
+    public List<String> getAllLegalMoves(Color turn) {
+        List<String> legalMoves = new ArrayList<>();
+
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                AbstractPiece piece = board[row][col];
+                if (piece != null && piece.getColor() == turn) {
+
+                    var movs = piece.isValidMove(row, col, board);
+
+                    for (var entry : movs.entrySet()) {
+                        var to = entry.getKey();
+                        boolean valid = entry.getValue(); // true = válido
+
+                        if (valid) {
+                            int toRow = to.getRight();
+                            int toCol = to.getLeft();
+
+                            String move = "";
+                            move += (char) ('a' + col);
+                            move += (8 - row);
+                            move += (char) ('a' + toCol);
+                            move += (8 - toRow);
+
+                            legalMoves.add(move);
+                        }
+                    }
+                }
+            }
+        }
+
+        return legalMoves;
+    }
+
+    public int evaluate() {
+        int score = 0;
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                AbstractPiece piece = board[row][col];
+                if (piece != null) {
+                    int val = switch (piece.getSymbol()) {
+                        case '♟' -> 100;
+                        case '♞' -> 320;
+                        case '♝' -> 330;
+                        case '♜' -> 500;
+                        case '♛' -> 900;
+                        case '♚' -> 20000;
+                        default -> 0;
+                    };
+
+                    score += (piece.getColor() == Color.WHITE ? val : -val);
+                }
+            }
+        }
+
+        return score;
+    }
+
+    public void moveSilent(String moveStr, Color turn) {
+        moveStr = moveStr.replaceAll("\\s+", "");
+        if (moveStr.length() != 4) return;
+
+        int fromCol = moveStr.charAt(0) - 'a';
+        int fromRow = 8 - Character.getNumericValue(moveStr.charAt(1));
+        int toCol = moveStr.charAt(2) - 'a';
+        int toRow = 8 - Character.getNumericValue(moveStr.charAt(3));
+
+        AbstractPiece piece = board[fromRow][fromCol];
+        if (piece == null) return;
+        if (piece.getColor() != turn) return;
+
+        var validMoves = piece.isValidMove(fromRow, fromCol, board);
+        if (validMoves.getOrDefault(Pair.of(toRow, toCol), true)) return;
+
+        board[toRow][toCol] = piece;
+        board[fromRow][fromCol] = null;
+    }
+
+    @Override
+    public Board clone() {
+        Board copy = new Board();
+
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                if (this.board[row][col] != null) {
+                    copy.board[row][col] = this.board[row][col].copy();
+                } else {
+                    copy.board[row][col] = null;
+                }
+            }
+        }
+
+        return copy;
     }
 
     public boolean isGameOver() {

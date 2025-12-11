@@ -20,17 +20,14 @@ public class PawnPiece extends AbstractPiece {
         int dir = (this.getColor() == Color.WHITE) ? -1 : 1;
         int startRow = (this.getColor() == Color.WHITE) ? 6 : 1;
 
-        // 1-step forward
         if (BoardHelper.inBounds(row + dir, col) && board[row + dir][col] == null) {
             moves.put(Pair.of(row + dir, col), true);
 
-            // 2-step forward from starting row
             if (row == startRow && board[row + 2 * dir][col] == null) {
                 moves.put(Pair.of(row + 2 * dir, col), true);
             }
         }
 
-        // Captures
         for (int dc : new int[]{-1, 1}) {
             int r = row + dir;
             int c = col + dc;
@@ -42,4 +39,8 @@ public class PawnPiece extends AbstractPiece {
         return moves;
     }
 
+    @Override
+    public AbstractPiece copy() {
+        return new PawnPiece(this.getColor());
+    }
 }

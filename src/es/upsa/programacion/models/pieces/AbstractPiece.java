@@ -32,4 +32,6 @@ public abstract class AbstractPiece {
     }
 
     public abstract Map<Pair<Integer, Integer>, Boolean> isValidMove(int pieceRow, int pieceCol, AbstractPiece[][] board);
+
+    public abstract AbstractPiece copy();
 }

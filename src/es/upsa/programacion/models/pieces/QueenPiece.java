@@ -44,4 +44,8 @@ public class QueenPiece extends AbstractPiece {
         return moves;
     }
 
+    @Override
+    public AbstractPiece copy() {
+        return new QueenPiece(this.getColor());
+    }
 }

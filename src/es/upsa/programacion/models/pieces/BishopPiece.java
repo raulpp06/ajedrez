@@ -42,4 +42,8 @@ public class BishopPiece extends AbstractPiece {
         return moves;
     }
 
+    @Override
+    public AbstractPiece copy() {
+        return new BishopPiece(this.getColor());
+    }
 }

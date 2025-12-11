@@ -19,7 +19,7 @@ public class UserMenu implements Menu {
 
     public void start() {
         int elegido;
-        Optional<AbstractUser> maybeUser = null;
+        Optional<AbstractUser> maybeUser = Optional.empty();
 
         System.out.println("Bienvenido al ajedrez\n");
 
@@ -77,7 +77,7 @@ public class UserMenu implements Menu {
                     case 0:
                         return;
                     case 1:
-                        BoardMenu boardMenu = new BoardMenu();
+                        BoardMenu boardMenu = new BoardMenu(user);
                         boardMenu.start();
                         break;
                     case 2:
